@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LandingPage from './components/landingPage/LandingPage';
 import './App.css';
+import { CssBaseline } from '@mui/material';
 
 class App extends Component {
   constructor(props) {
@@ -12,29 +15,55 @@ class App extends Component {
 
   async componentDidMount() {
     try {
-      console.log("HI");
+      // Simulate fetching initial data
+      await this.fetchInitialData();
+      this.setState({ loading: false });
     } catch (error) {
-      this.setState({ error: error, loading: false });
+      this.setState({ error: error.message, loading: false });
     }
+  }
+
+  fetchInitialData() {
+    // Simulate async operation (e.g., API call)
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log("Fetching initial data...");
+        resolve();
+      }, 2000);
+    });
   }
 
   render() {
     const { loading, error } = this.state;
 
     if (loading) {
-      return <div>
-        <h1>React App</h1>
-      </div>;
+      return (
+        <div>
+          <h1>Loading...</h1>
+        </div>
+      );
     }
 
     if (error) {
-      return <div>Error: {error}</div>;
+      return (
+        <div>
+          <h1>Error: {error}</h1>
+        </div>
+      );
     }
 
     return (
-      <div>
-        <h1>React App</h1>
-      </div>
+      <React.Fragment>
+        <CssBaseline />
+        <Router>
+          <div className="App">
+            <Routes>
+              <Route exact path="/" element={<LandingPage />} />
+              {/* Add more routes as needed */}
+            </Routes>
+          </div>
+        </Router>
+      </React.Fragment>
     );
   }
 }
