@@ -38,8 +38,9 @@ class App extends Component {
 
     if (loading) {
       return (
-        <div>
-          <h1>Loading...</h1>
+        <div class="landingPage">
+          <div className="spinner"></div>
+          {/* <h1>Loading...</h1> */}
         </div>
       );
     }

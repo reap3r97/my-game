@@ -7,10 +7,18 @@ class LandingPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            openModal: false
+            openModal: false,
+            isLogin: true,
+            showForgotPassword: false,
+            usernameOrEmail: '',
+            password: ''
         };
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.toggleForm = this.toggleForm.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
+        this.handleForgotPassword = this.handleForgotPassword.bind(this);
     }
 
     handleOpenModal() {
@@ -18,11 +26,50 @@ class LandingPage extends Component {
     }
 
     handleCloseModal() {
-        this.setState({ openModal: false });
+        this.setState({
+            openModal: false,
+            isLogin: true,
+            showForgotPassword: false,
+            usernameOrEmail: '',
+            password: ''
+        });
+    }
+
+    toggleForm() {
+        this.setState((prevState) => ({
+            isLogin: !prevState.isLogin,
+            showForgotPassword: false,
+            usernameOrEmail: '',
+            password: ''
+        }));
+    }
+
+    handleInputChange(event) {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
+    handleLoginSubmit(event) {
+        event.preventDefault();
+        console.log('Logging in with:', this.state.usernameOrEmail, this.state.password);
+        this.setState({
+            openModal: false,
+            usernameOrEmail: '',
+            password: ''
+        });
+    }
+
+    handleForgotPassword(event) {
+        event.preventDefault();
+        console.log('Forgot password for:', this.state.usernameOrEmail);
+        this.setState({
+            openModal: false,
+            usernameOrEmail: '',
+            password: ''
+        });
     }
 
     render() {
-        const { openModal } = this.state;
+        const { openModal, isLogin, showForgotPassword } = this.state;
 
         return (
             <div className="landingPage">
@@ -39,55 +86,143 @@ class LandingPage extends Component {
                         color="primary"
                         onClick={this.handleOpenModal}
                         className="button"
+                        textTransform="none"
                     >
                         Get Started!
                     </Button>
                 </Box>
                 <Modal open={openModal} onClose={this.handleCloseModal} className="modal">
                     <Box className="modal-content">
-                        <Typography variant="h5">Login or Signup</Typography>
-                        <form>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        label="Username"
-                                        variant="outlined"
-                                        size="small"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        label="Password"
-                                        variant="outlined"
-                                        size="small"
-                                        type="password"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Button
-                                        fullWidth
-                                        variant="contained"
-                                        color="primary"
-                                        type="submit"
+                        <div className="modal-header">
+                        </div>
+                        {showForgotPassword ? (
+                            <>
+                                <Typography variant="h5">Forgot Password</Typography>
+                                <form style={{ width: '100%' }} onSubmit={this.handleForgotPassword}>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                fullWidth
+                                                label="Username or Email*"
+                                                variant="outlined"
+                                                size="small"
+                                                margin="normal"
+                                                name="usernameOrEmail"
+                                                value={this.state.usernameOrEmail}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button
+                                                fullWidth
+                                                variant="contained"
+                                                color="primary"
+                                                type="submit"
+                                            >
+                                                Submit
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button
+                                                fullWidth
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={this.handleCloseModal}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </form>
+                                <Typography variant="body2" align="center" style={{ marginTop: '16px' }}>
+                                    <Link
+                                        to="#"
+                                        onClick={() => this.setState({ showForgotPassword: false })}
+                                        style={{ textDecoration: 'none' }}
                                     >
-                                        Login
-                                    </Button>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Button
-                                        fullWidth
-                                        variant="outlined"
-                                        color="primary"
-                                        type="button"
-                                        onClick={this.handleCloseModal}
+                                        Back to Login
+                                    </Link>
+                                </Typography>
+                            </>
+                        ) : (
+                            <>
+                                <Typography variant="h5">{isLogin ? 'Log In' : 'Sign Up'}</Typography>
+                                <form style={{ width: '100%' }} onSubmit={this.handleLoginSubmit}>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                fullWidth
+                                                label="Username or Email*"
+                                                variant="outlined"
+                                                size="small"
+                                                margin="normal"
+                                                name="usernameOrEmail"
+                                                value={this.state.usernameOrEmail}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                fullWidth
+                                                label="Password*"
+                                                variant="outlined"
+                                                size="small"
+                                                type="password"
+                                                margin="normal"
+                                                name="password"
+                                                value={this.state.password}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button
+                                                fullWidth
+                                                variant="contained"
+                                                color="primary"
+                                                type="submit"
+                                            >
+                                                {isLogin ? 'Login' : 'Sign up'}
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button
+                                                fullWidth
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={this.handleCloseModal}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </form>
+                                <Typography variant="body2" align="center" style={{ marginTop: '16px' }}>
+                                    <Link
+                                        to="#"
+                                        onClick={() => this.setState({ showForgotPassword: true })}
+                                        style={{ textDecoration: 'none' }}
                                     >
-                                        Cancel
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </form>
+                                        Forgot password?
+                                    </Link>
+                                    <br />
+                                    {isLogin ? (
+                                        <>
+                                            New to the game?{' '}
+                                            <Button onClick={this.toggleForm} color="primary" style={{ textTransform: 'none' }}>
+                                                Sign up
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            Already have an account?{' '}
+                                            <Button onClick={this.toggleForm} color="primary" style={{ textTransform: 'none' }}>
+                                                Log in
+                                            </Button>
+                                        </>
+                                    )}
+                                </Typography>
+                            </>
+                        )}
                     </Box>
                 </Modal>
             </div>
