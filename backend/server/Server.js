@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import playerRoutes from '../routes/playerRoutes.js'; // Adjust path as per your project structure
 
 dotenv.config();
 
@@ -16,7 +17,9 @@ class Server {
     }
 
     routes() {
-        // Need to add routes here when they are created
+        this.app.use('/players', playerRoutes); // Mounting playerRoutes on '/players'
+        // Add other routes as needed
+        // Example: this.app.use('/characters', characterRoutes);
     }
 
     start() {
